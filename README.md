@@ -13,7 +13,7 @@ Bunyan logs and outputs human readable log lines (which look sort of vaguely lik
 There are plenty of other npm packages out there that do something similar, but this is the best
 one. ;)
 
-![](https://github.com/benbria/bunyan-debug-stream/blob/master/docs/sample.png)
+![](https://github.com/jwalton/bunyan-debug-stream/blob/master/docs/sample.png)
 
 Features
 ========
