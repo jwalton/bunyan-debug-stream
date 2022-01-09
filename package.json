@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "colors": "1.4.0",
-    "exception-formatter": "^1.0.4"
+    "exception-formatter": "^2.1.2"
   },
   "devDependencies": {
     "@benbria/semantic-release-config": "^1.0.0",
