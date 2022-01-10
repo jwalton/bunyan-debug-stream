@@ -16,7 +16,7 @@
     "url": "https://github.com/jwalton/bunyan-debug-stream.git"
   },
   "dependencies": {
-    "colors": "1.4.0",
+    "colors": "1.4.2",
     "exception-formatter": "^1.0.4"
   },
   "devDependencies": {
