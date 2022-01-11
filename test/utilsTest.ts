@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const { dateToString, lpad } = require('../src/utils');
+import { expect } from 'chai';
+import { dateToString, lpad } from '../src/utils';
 
 describe('utils', function() {
     it('should correctly format a date', function() {
@@ -16,7 +16,7 @@ describe('utils', function() {
 
     it('should correctly format a date which is not a date', function() {
         const date = 'hello';
-        const str = dateToString(date);
+        const str = dateToString(date as any);
         expect(str).to.equal('hello');
     });
 

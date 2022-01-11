@@ -6,7 +6,7 @@ var log = bunyan.createLogger({
     streams: [{
         level:  'trace',
         type:   'raw',
-        stream: bunyanDebugStream({
+        stream: bunyanDebugStream.create({
             basepath: __dirname, // this should be the root folder of your project.
             prefixers: {
                 account: function(account) {return account.name;}
@@ -26,7 +26,7 @@ function main() {
     log.warn("This is an warning");
     log.error("This is an error");
     log.fatal("This is a fatal!");
-    log.info({account: {name: 'benbria', _id: 12}}, "Example with a prefixer");
+    log.info({account: {name: 'prefix', _id: 12}}, "Example with a prefixer");
     log.info({foo: {bar: "baz"}}, "An example with an object");
     log.info({qux: {bar: "baz"}}, "An example with a stringifier");
     log.error(new Error("Ohs noes!"), "An example with an Error");
@@ -82,3 +82,4 @@ function main() {
 }
 
 main();
+console.log();

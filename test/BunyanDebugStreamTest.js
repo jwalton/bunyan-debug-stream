@@ -2,7 +2,7 @@ const bunyan = require('bunyan');
 const { expect } = require('chai');
 const streamToString = require('stream-to-string');
 const through2 = require('through2');
-const BunyanDebugStream = require('../src/BunyanDebugStream');
+const bunyanDebugStream = require('../src/BunyanDebugStream');
 const { dateToString } = require('../src/utils');
 
 const ENTRY = {
@@ -21,7 +21,7 @@ function generateLogEntry(entry, options={}) {
         out
     }, options);
 
-    const stream = new BunyanDebugStream(bunyanDebugStreamOptions);
+    const stream = bunyanDebugStream.create(bunyanDebugStreamOptions);
     stream.write(entry);
     stream.end();
     out.end();
