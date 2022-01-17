@@ -60,7 +60,7 @@ const EXPRESS_BUNYAN_LOGGER_FIELDS = [
     'req_id',
 ];
 
-interface BunyanDebugStreamOptions {
+export interface BunyanDebugStreamOptions {
     colors?: { [key: number]: string | string[] } | false | null;
     forceColor?: boolean;
     basepath?: string;
