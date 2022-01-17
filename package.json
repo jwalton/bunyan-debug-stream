@@ -3,8 +3,8 @@
   "version": "0.0.0-semantic-release",
   "description": "",
   "sideEffects": false,
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./lib/BunyanDebugStream.js",
+  "types": "./lib/BunyanDebugStream.d.ts",
   "files": [
     "lib/**/*"
   ],
