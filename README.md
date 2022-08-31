@@ -40,16 +40,18 @@ The most basic usage involves just creating a Bunyan logger which writes raw obj
 const bunyanDebugStream = require('bunyan-debug-stream');
 
 const log = bunyan.createLogger({
-    name: "myLog",
-    streams: [{
-        level:  'info',
-        type:   'raw',
-        stream: bunyanDebugStream.create({
-            basepath: __dirname, // this should be the root folder of your project.
-            forceColor: true
-        })
-    }],
-    serializers: bunyanDebugStream.serializers
+  name: 'myLog',
+  streams: [
+    {
+      level: 'info',
+      type: 'raw',
+      stream: bunyanDebugStream.create({
+        basepath: __dirname, // this should be the root folder of your project.
+        forceColor: true,
+      }),
+    },
+  ],
+  serializers: bunyanDebugStream.serializers,
 });
 ```
 
@@ -77,11 +79,11 @@ the [colors](https://github.com/Marak/colors.js) module to color lines. Pass in 
 
 ```js
 bunyanDebugStream.create({
-    colors: {
-        'info': 'blue',
-        'error': ['red', 'bold']
-    }
-})
+  colors: {
+    info: 'blue',
+    error: ['red', 'bold'],
+  },
+});
 ```
 
 ### forceColor
@@ -95,7 +97,7 @@ grunt or gulp, set this to true. Note that under the hood, this sets `colors.ena
 Bunyan logs can contain extra data beyond just the log message. If you call:
 
 ```js
-log.info({foo: {bar: "baz"}}, "Hello World");
+log.info({ foo: { bar: 'baz' } }, 'Hello World');
 ```
 
 Then bunyan-debug-stream might print something like:
@@ -113,10 +115,12 @@ a string. So, for example, you might do:
 
 ```js
 bunyanDebugStream.create({
-    stringifiers: {
-        'foo': function(foo) {return "The value of bar is " + foo.bar;}
-    }
-})
+  stringifiers: {
+    foo: function (foo) {
+      return 'The value of bar is ' + foo.bar;
+    },
+  },
+});
 ```
 
 This would change the output to be:
@@ -133,15 +137,15 @@ returns a string, but for those extra special complicated cases, you can do some
 
 ```js
 bunyanDebugStream.create({
-    stringifiers: {
-        'req': function(req, options) {
-            return {
-                value: req.url + " - " + options.entry.res.statusCode,
-                consumed: ["req", "res"]
-            }
-        }
-    }
-})
+  stringifiers: {
+    req: function (req, options) {
+      return {
+        value: req.url + ' - ' + options.entry.res.statusCode,
+        consumed: ['req', 'res'],
+      };
+    },
+  },
+});
 ```
 
 `options` here will be a `{entry, useColor, debugStream}` object, where `entry` is the full Bunyan
@@ -156,10 +160,12 @@ the value will be prefixed at the beginning of the message:
 
 ```js
 bunyanDebugStream.create({
-    prefixers: {
-        'foo': function(foo) {return foo.bar;}
-    }
-})
+  prefixers: {
+    foo: function (foo) {
+      return foo.bar;
+    },
+  },
+});
 ```
 
 would result in the output:
@@ -190,6 +196,25 @@ You may also specify a `function(time, entry)` here to generate a custom date st
 ```js
 {
   showDate: (time) => time.toISOString();
+}
+```
+
+### showPrefixes
+
+Turned on by default.
+If `options.showPrefixes` is false, bunyan-debug-stream doesn't print prefixes (see [stringifiers and prefixiers](#stringifiers-and-prefixers))
+in the output, e.g.:
+
+```diff
+-MyLogger[649] INFO:  main (./s/app:195): [prefix1,prefix2] Hello World
++MyLogger[649] INFO:  main (./s/app:195): Hello World
+```
+
+You may also specify a `function(prefixes)` here to generate a custom prefix string:
+
+```js
+{
+  showPrefixes: (prefixes) => prefixes.join(' '),
 }
 ```
 
@@ -230,12 +255,14 @@ For example, if you have `foo` stringifier and arbitrary field `extraField: 1`, 
 
 ```js
 const log = bunyanDebugStream.create({
-    stringifiers: {
-        'foo': function(foo) {return "The value of bar is " + foo.bar;}
-    }
+  stringifiers: {
+    foo: function (foo) {
+      return 'The value of bar is ' + foo.bar;
+    },
+  },
 });
 
-log.info({extraField: 1, foo: {bar: "baz"}}, "Hello World");
+log.info({ extraField: 1, foo: { bar: 'baz' } }, 'Hello World');
 ```
 
 Then you can expect that `extraField` will get omitted, and only `foo` will be printed:

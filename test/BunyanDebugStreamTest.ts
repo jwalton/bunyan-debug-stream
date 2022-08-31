@@ -47,4 +47,50 @@ describe('BunyanDebugStream', function () {
             }
         );
     });
+
+    describe('prefixes', () => {
+        const PREFIXED_ENTRY = {
+            ...ENTRY,
+
+            p1: 'a',
+            p2: 'b',
+        };
+
+        const PREFIXERS = {
+            prefixers: {
+                p1: (x: string) => x,
+                p2: (y: string) => y + y,
+            },
+        };
+
+        it('should use a default prefix format', function () {
+            return generateLogEntry(PREFIXED_ENTRY, PREFIXERS).then((result: string) => {
+                expect(result).to.equal(
+                    `${dateToString(ENTRY.time)} proc[19] INFO:  [a,bb] Hello World\n`
+                );
+            });
+        });
+
+        it('should allow to customize the prefix format', function () {
+            return generateLogEntry(PREFIXED_ENTRY, {
+                ...PREFIXERS,
+                showPrefixes: (prefixes) => `{${prefixes.join('; ')}}`,
+            }).then((result: string) => {
+                expect(result).to.equal(
+                    `${dateToString(ENTRY.time)} proc[19] INFO:  {a; bb} Hello World\n`
+                );
+            });
+        });
+
+        it('should allow to omit prefixes', function () {
+            return generateLogEntry(PREFIXED_ENTRY, {
+                ...PREFIXERS,
+                showPrefixes: false,
+            }).then((result: string) => {
+                expect(result).to.equal(
+                    `${dateToString(ENTRY.time)} proc[19] INFO:  Hello World\n`
+                );
+            });
+        });
+    });
 });
