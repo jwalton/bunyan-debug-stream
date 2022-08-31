@@ -67,6 +67,7 @@ export interface BunyanDebugStreamOptions {
     basepathReplacement?: string;
     showProcess?: boolean;
     showDate?: boolean | ((time: Date, entry: any) => string);
+    showPrefixes?: boolean | ((prefixes: string[]) => string);
     processName?: string;
     maxExceptionLines?: number | 'auto';
     stringifiers?: { [key: string]: Stringifier | null };
@@ -92,6 +93,7 @@ class BunyanDebugStream extends Writable {
     private _basepath: string;
     private _indent: string;
     private _showDate: boolean | ((time: Date, entry: any) => string);
+    private _showPrefixes: boolean | ((prefixes: string[]) => string);
     private _showLoggerName: boolean;
     private _showPid: boolean;
     private _showLevel: boolean;
@@ -114,6 +116,10 @@ class BunyanDebugStream extends Writable {
     //   object.  If false, time will not be shown.  You can also supply a `fn(time, entry)` here,
     //   which will be called to generate a date string if you want to customize the output
     //   format (or if `entry.time` is not a Date object).
+    // * `options.showPrefixes` if false, then hide the prefixes. True by default.
+    //   You can also supply a `fn(prefixesArray)` here, which will be called to generate a
+    //   prefix string before the beginning of the `msg`. By default, it generates "[p1,...,pN]"
+    //   string, i.e. square brackets surrounding comma-separated values.
     // * `options.processName` is the name of this process.  Defaults to the filename of the second
     //   argument in `process.argv` (on the assumption that you're running something like
     //   `node myApp.js`.)
@@ -122,7 +128,8 @@ class BunyanDebugStream extends Writable {
     //   properties in log entries into strings.  A `null` stringifier can be used to hide a
     //   property from the logs.
     // * `options.prefixers` is similar to `options.stringifiers` but these strings will be prefixed
-    //   onto the beginning of the `msg`, and wrapped in "[]".
+    //   onto the beginning of the `msg`, and wrapped in "[]" by default (use `options.showPrefixes`
+    //   to customize the output).
     // * `options.out` is the stream to write data to.  Defaults to `process.stdout`.
     //
     constructor(options: BunyanDebugStreamOptions = {}) {
@@ -200,6 +207,7 @@ class BunyanDebugStream extends Writable {
         this._indent = this.options.indent != null ? this.options.indent : '  ';
 
         this._showDate = this.options.showDate != null ? this.options.showDate : true;
+        this._showPrefixes = this.options.showPrefixes != null ? this.options.showPrefixes : true;
         this._showLoggerName =
             this.options.showLoggerName != null ? this.options.showLoggerName : true;
         this._showPid = this.options.showPid != null ? this.options.showPid : true;
@@ -349,7 +357,14 @@ class BunyanDebugStream extends Writable {
             }
         }
 
-        const joinedPrefixes = prefixes.length > 0 ? `[${prefixes.join(',')}] ` : '';
+        let joinedPrefixes = '';
+        if (this._showPrefixes && prefixes.length > 0) {
+            if (typeof this._showPrefixes === 'function') {
+                joinedPrefixes = `${this._showPrefixes(prefixes)} `;
+            } else {
+                joinedPrefixes = `[${prefixes.join(',')}] `;
+            }
+        }
 
         let date = undefined;
         if (this._showDate && typeof this._showDate === 'function') {
@@ -530,6 +545,6 @@ export const stdStringifiers: { [key: string]: Stringifier } = {
 
 export function create(options: BunyanDebugStreamOptions): NodeJS.WritableStream {
     return new BunyanDebugStream(options);
-};
+}
 
 export default create;
