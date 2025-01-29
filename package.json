@@ -80,6 +80,11 @@
   "peerDependencies": {
     "bunyan": "*"
   },
+  "peerDependenciesMeta": {
+    "bunyan": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=0.12.0"
   }
